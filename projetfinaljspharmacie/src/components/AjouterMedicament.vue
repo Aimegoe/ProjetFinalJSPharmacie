@@ -83,7 +83,7 @@ function enregistrerMedicament() {
           {{ formeItem }}
         </option>
       </select>
-      <input type="number" v-model="qte" min="0" class="formulaire-input" />
+      <input type="number" v-model="qte" min="1" class="formulaire-input" />
       <input id="photo" @change="handleFileUpload" type="file" />
       <input type="submit" value="Enregistrer" class="bouton-envoi" />
     </form>

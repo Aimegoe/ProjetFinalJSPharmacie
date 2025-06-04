@@ -7,7 +7,9 @@ const props = defineProps([
   'listeFormesPharmaceutiques'
 ]);
 const emit = defineEmits([
-  'getMedicaments'
+  'getMedicaments',
+  'quantitemoinsun',
+  'quantiteplusun'
 ]);
 const modeModification = ref(false);
 const photo = ref(null);
@@ -53,7 +55,7 @@ function enregistrerModification(medicament, photo) {
     <img :src="medicament.photo" class="image-medicament">
     <div v-if="!modeModification" class="medicament-infos">
       <p>{{ medicament.afficheMedicament() }}</p>
-      <div v-if="medicament.qte < 3" class="faible-qte">
+      <div v-if="medicament.qte <= 5" class="faible-qte">
         <p>Attention, faible quantité !!</p>
       </div>
       <div class="boutonsParMedic">
@@ -71,7 +73,7 @@ function enregistrerModification(medicament, photo) {
             {{ forme }}
           </option>
         </select>
-        <input type="number" v-model="medicament.qte" min="0" class="input-formulaire">
+        <input type="number" v-model="medicament.qte" min="1" class="input-formulaire">
         <input id="photo" @change="handleFileUpload" type="file" class="input-formulaire">
         <button type="submit" class="bouton">Enregistrer</button>
         <button type="button" @click="modeModification = false" class="bouton">Annuler</button>

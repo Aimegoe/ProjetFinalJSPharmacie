@@ -10,7 +10,13 @@ import AjouterFormePharmaceutique from './AjouterFormePharmaceutique.vue';
 
 const listeMedicaments = reactive([]);
 const listeFormesPharmaceutiques = reactive([]);
-const triActif = ref({ type: null, denomination: false, quantite: false, forme: false, direction: 'asc' });
+const triActif = ref({
+  type: null,
+  denomination: false,
+  quantite: false,
+  forme: false,
+  direction: 'asc'
+});
 const barreDeRecherche = ref('');
 // `computed` crée une propriété réactive qui filtre les médicaments en fonction de la recherche.
 const medicamentsFiltres = computed(() => {
