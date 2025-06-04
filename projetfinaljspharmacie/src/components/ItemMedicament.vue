@@ -56,7 +56,7 @@ function enregistrerModification(medicament, photo) {
     <div v-if="!modeModification" class="medicament-infos">
       <p>{{ medicament.afficheMedicament() }}</p>
       <div v-if="medicament.qte <= 5" class="faible-qte">
-        <p>Attention, faible quantité !!</p>
+        <p>Attention, faible quantité !</p>
       </div>
       <div class="boutonsParMedic">
         <button @click="$emit('quantiteplusun', medicament)" class="bouton">+1</button>
