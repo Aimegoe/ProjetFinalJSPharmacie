@@ -1,5 +1,5 @@
 Site web : 
-  Pharmacie du bon vivant
+  Pharmacie du bon vivant: http://croquerledisque.mmicastres.fr/
 
 Description : 
   Le site de la pharmacie du bon vivant permet de consulter en temps réel les médicaments disponibles sur place. 
