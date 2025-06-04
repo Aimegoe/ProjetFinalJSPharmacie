@@ -6,6 +6,7 @@ const medicamentAleatoire = ref(null);
 const medicamentSelectionne = ref(null);
 const message = ref('');
 const propositionsFausses = ref([]);
+let nombrePropositionsFausses = 0;
 const jeuEnCours = ref(false);
 
 function getImage(photo) {
@@ -40,9 +41,11 @@ function choisirMedicamentAleatoire() {
 function verifierSelection() {
   if (!medicamentSelectionne.value || !medicamentAleatoire.value) return;
   if (medicamentSelectionne.value.id === medicamentAleatoire.value.id) {
-    message.value = `Félicitations, vous avez gagné ! La bonne réponse était : ${medicamentAleatoire.value.nom}`;
+    message.value = `Félicitations, vous avez gagné au bout de ` + nombrePropositionsFausses + ` tentatives ! La bonne réponse était : ${medicamentAleatoire.value.nom}`;
+    nombrePropositionsFausses = 0;
   } else {
-    message.value = 'Mauvaise réponse, essayez encore.';
+    nombrePropositionsFausses += 1;
+    message.value = "Mauvaise réponse, essayez encore. Nombre de mauvaises réponses: " + nombrePropositionsFausses.toString();
     if (!propositionsFausses.value.some(med => med.id === medicamentSelectionne.value.id)) {
       propositionsFausses.value.push(medicamentSelectionne.value);
     }
@@ -64,7 +67,7 @@ onMounted(() => {
   <div class="conteneur-jeu">
     <button v-if="!jeuEnCours" @click="choisirMedicamentAleatoire" class="bouton-demarrer">Jeu du médicament</button>
     <div v-if="medicamentAleatoire" class="jeu-medicament-aleatoire">
-      <p class="devine-le-medicament">Devinez le médicament :</p>
+      <p class="devine-le-medicament">Un médicament a été tiré au sort, à vous de trouver duquel il s'agit:</p>
       <select v-model="medicamentSelectionne" class="selection-medicament">
         <option v-for="medicament in medicaments" :key="medicament.id" :value="medicament">
           {{ medicament.nom }}
