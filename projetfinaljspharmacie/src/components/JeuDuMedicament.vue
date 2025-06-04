@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 
 const medicaments = ref([]);
+const medicamentsRestants = ref([]);
 const medicamentAleatoire = ref(null);
 const medicamentSelectionne = ref(null);
 const message = ref('');
@@ -15,6 +16,7 @@ function getImage(photo) {
   }
   return `https://apipharmacie.pecatte.fr/images/${photo}`;
 }
+
 function getMedicaments() {
   const url = `https://apipharmacie.pecatte.fr/api/6/medicaments`;
   fetch(url)
@@ -27,30 +29,36 @@ function getMedicaments() {
         qte: med.qte,
         photo: getImage(med.photo)
       }));
+      medicamentsRestants.value = [...medicaments.value];
     })
     .catch((error) => console.log(error));
 }
+
 function choisirMedicamentAleatoire() {
   if (medicaments.value.length === 0) return;
   const indexAleatoire = Math.floor(Math.random() * medicaments.value.length);
   medicamentAleatoire.value = medicaments.value[indexAleatoire];
   message.value = '';
   propositionsFausses.value = [];
+  medicamentsRestants.value = [...medicaments.value];
   jeuEnCours.value = true;
 }
+
 function verifierSelection() {
   if (!medicamentSelectionne.value || !medicamentAleatoire.value) return;
   if (medicamentSelectionne.value.id === medicamentAleatoire.value.id) {
-    message.value = `Félicitations, vous avez gagné au bout de ` + nombrePropositionsFausses + ` tentatives ! La bonne réponse était : ${medicamentAleatoire.value.nom}`;
+    message.value = `Félicitations, vous avez gagné au bout de ${nombrePropositionsFausses} tentatives ! La bonne réponse était : ${medicamentAleatoire.value.nom}`;
     nombrePropositionsFausses = 0;
   } else {
     nombrePropositionsFausses += 1;
-    message.value = "Mauvaise réponse, essayez encore. Nombre de mauvaises réponses: " + nombrePropositionsFausses.toString();
+    message.value = `Mauvaise réponse, essayez encore. Nombre de mauvaises réponses: ${nombrePropositionsFausses}`;
     if (!propositionsFausses.value.some(med => med.id === medicamentSelectionne.value.id)) {
       propositionsFausses.value.push(medicamentSelectionne.value);
+      medicamentsRestants.value = medicamentsRestants.value.filter(med => med.id !== medicamentSelectionne.value.id);
     }
   }
 }
+
 function recommencer() {
   medicamentAleatoire.value = null;
   medicamentSelectionne.value = null;
@@ -58,6 +66,7 @@ function recommencer() {
   propositionsFausses.value = [];
   jeuEnCours.value = false;
 }
+
 onMounted(() => {
   getMedicaments();
 });
@@ -69,7 +78,7 @@ onMounted(() => {
     <div v-if="medicamentAleatoire" class="jeu-medicament-aleatoire">
       <p class="devine-le-medicament">Un médicament a été tiré au sort, à vous de trouver duquel il s'agit:</p>
       <select v-model="medicamentSelectionne" class="selection-medicament">
-        <option v-for="medicament in medicaments" :key="medicament.id" :value="medicament">
+        <option v-for="medicament in medicamentsRestants" :key="medicament.id" :value="medicament">
           {{ medicament.nom }}
         </option>
       </select>
@@ -87,6 +96,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .conteneur-jeu {
   max-width: 600px;
